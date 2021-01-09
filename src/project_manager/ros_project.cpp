@@ -339,7 +339,7 @@ void ROSProject::updateEnvironment()
 {
   if (ROSBuildConfiguration *bc = rosBuildConfiguration())
   {
-    ROSUtils::WorkspaceInfo workspaceInfo = ROSUtils::getWorkspaceInfo(projectDirectory(), bc->buildSystem(), distribution());
+    ROSUtils::WorkspaceInfo workspaceInfo = ROSUtils::getWorkspaceInfo(projectDirectory(), bc->rosBuildSystem(), distribution());
     bc->updateQtEnvironment(Utils::Environment(ROSUtils::getWorkspaceEnvironment(workspaceInfo, bc->environment()).toStringList()));
   }
 }
@@ -421,7 +421,7 @@ void ROSProject::asyncUpdateCppCodeModel(bool success)
                                        tr("Parsing Build Files for Project \"%1\"").arg(displayName()),
                                        Constants::ROS_RELOADING_BUILD_INFO);
 
-        ROSUtils::WorkspaceInfo workspaceInfo = ROSUtils::getWorkspaceInfo(projectDirectory(), rosBuildConfiguration()->buildSystem(), distribution());
+        ROSUtils::WorkspaceInfo workspaceInfo = ROSUtils::getWorkspaceInfo(projectDirectory(), rosBuildConfiguration()->rosBuildSystem(), distribution());
         Utils::Environment current_environment = rosBuildConfiguration()->environment();
 
         const Kit *k = nullptr;
