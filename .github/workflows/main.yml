@@ -10,6 +10,7 @@ jobs:
       matrix:
         config:
           - { name: "Linux", os: ubuntu-20.04, build: "RelWithDebInfo" }
+          - { name: "Linux_clang", os: ubuntu-20.04, build: "RelWithDebInfo", cc: clang, cxx: clang++ }
           - { name: "Windows", os: windows-latest, build: "Release" }
           - { name: "macOS", os: macos-14, build: "Release" }
     steps:
@@ -46,6 +47,9 @@ jobs:
           cat env >> $GITHUB_ENV
 
       - name: build plugin
+        env:
+          CC: ${{ matrix.config.cc }}
+          CXX: ${{ matrix.config.cxx }}
         run: |
           cmake -B build -GNinja -DCMAKE_BUILD_TYPE=${{ matrix.config.build }} -DCMAKE_PREFIX_PATH="${{ env.QTC_PATH }};${{ env.QT_PATH }}" -DBUILD_ROSTERMINAL=OFF
           cmake --build build --target package
