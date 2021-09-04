@@ -10,6 +10,7 @@ jobs:
       matrix:
         config:
           - { name: "Linux", os: ubuntu-20.04 }
+          - { name: "Linux (clang)", os: ubuntu-20.04, cc: clang, cxx: clang++ }
           - { name: "Windows", os: windows-latest }
           - { name: "macOS", os: macos-latest }
     steps:
@@ -74,6 +75,9 @@ jobs:
           cmake --build build --target install
 
       - name: build plugin
+        env:
+          CC: ${{ matrix.config.cc }}
+          CXX: ${{ matrix.config.cxx }}
         run: |
           cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.QTC_PATH }};${{ env.QT_PATH }}" -Dyaml-cpp_DIR=${{ env.YAML_DIR }} -DBUILD_ROSTERMINAL=OFF
           cmake --build build --target package
