@@ -6,14 +6,19 @@ jobs:
   build:
     name: build (${{ matrix.config.name }})
     runs-on: ${{ matrix.config.os }}
+    container:
+      image: ubuntu:22.04
+
     strategy:
       matrix:
         config:
           - { name: "Linux", os: ubuntu-latest }
           - { name: "Windows", os: windows-latest }
           - { name: "macOS", os: macos-latest }
+
     outputs:
       archive_name: ${{ steps.find_plugin_archive.outputs.archive_name }}
+
     steps:
       - uses: actions/checkout@v3
 
