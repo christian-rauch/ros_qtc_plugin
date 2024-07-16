@@ -6,5 +6,5 @@
 qtc_version: "14-rc1"
 qtc_modules: ["qtcreator", "qtcreator_dev"]
 
-qt_version: "6.6"
+qt_version: "6.7"
 qt_modules: ['qtbase', 'qtdeclarative', 'icu', 'qttools', 'qt5compat']
