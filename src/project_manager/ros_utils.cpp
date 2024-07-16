@@ -70,6 +70,10 @@ bool ROSUtils::sourceWorkspace(QProcessEnvironment &env, const WorkspaceInfo &wo
     if (!initializeWorkspace(env, workspaceInfo))
         return false;
 
+    Core::MessageManager::writeFlashing(">>> init:");
+    Core::MessageManager::writeFlashing(env.toStringList());
+    Core::MessageManager::writeFlashing("<<< init");
+
     Utils::FilePath sourcePath(workspaceInfo.develPath);
     if (workspaceInfo.install)
       sourcePath = Utils::FilePath(workspaceInfo.installPath);
@@ -95,6 +99,9 @@ bool ROSUtils::sourceWorkspace(QProcessEnvironment &env, const WorkspaceInfo &wo
     }
 
     sourceWorkspaceHelper(env, source_path);
+    Core::MessageManager::writeFlashing(">>> workspace:");
+    Core::MessageManager::writeFlashing(env.toStringList());
+    Core::MessageManager::writeFlashing("<<< workspace");
     return true;
 }
 
@@ -1219,6 +1226,9 @@ QProcessEnvironment ROSUtils::getWorkspaceEnvironment(const WorkspaceInfo &works
     // source workspaces
     sourceWorkspace(env, workspaceInfo);
 
+    Core::MessageManager::writeFlashing(">>> env:");
+    Core::MessageManager::writeFlashing(env.toStringList());
+    Core::MessageManager::writeFlashing("<<< env");
 
     return env;
 }
