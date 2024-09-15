@@ -58,6 +58,27 @@ jobs:
           path: |
             ./build/ROSProjectManager-*-*-*.zip
 
+      - name: install Qt Creator DEB package
+        if: runner.os == 'Linux'
+        run: |
+          ./packaging/qtcreator_deb_install.sh
+
+      - name: generate plugin DEB package
+        if: runner.os == 'Linux'
+        run: |
+          cd build
+          cpack -G DEB
+
+      - name: upload artifact (DEB)
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin_archive_artifact_${{ matrix.config.name }}_deb
+          if-no-files-found: error
+          path: |
+            ./build/ROSProjectManager-*-*-*.deb
+            ./build/ROSProjectManager-*-*-*.ddeb
+
   release:
     name: create release
     if: contains(github.ref, '/tags/')
@@ -75,4 +96,4 @@ jobs:
         uses: ncipollo/release-action@v1
         id: create_release
         with:
-          artifacts: ROSProjectManager-*-*-*.zip
+          artifacts: ROSProjectManager-*-*-*.zip,ROSProjectManager-*-*-*.deb
