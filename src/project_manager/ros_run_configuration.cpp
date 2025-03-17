@@ -20,6 +20,7 @@
  */
 #include "ros_run_configuration.h"
 #include "ros_generic_run_step.h"
+#include "ros_run_steps_page.h"
 
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
@@ -57,6 +58,17 @@ using namespace ProjectExplorer;
 
 namespace ROSProjectManager {
 namespace Internal {
+
+RunStepListAspect::RunStepListAspect(Utils::AspectContainer *container, RunStepList *rsl)
+: BaseAspect(container)
+{
+    // QWidget * aaa = new RunStepListWidget();
+    setConfigWidgetCreator([rsl](){
+        RunStepListWidget * ww = new RunStepListWidget;
+        ww->init(rsl);
+        return ww;
+    });
+}
 
 const char ROS_RC_ID[] = "ROSProjectManager.ROSRunConfiguration";
 

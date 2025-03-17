@@ -27,6 +27,7 @@
 #include <projectexplorer/buildstep.h>
 #include <utils/processinfo.h>
 #include <debugger/debuggerruncontrol.h>
+#include <projectexplorer/runconfigurationaspects.h>
 
 #include <QPointer>
 #include <QMenu>
@@ -39,6 +40,11 @@ QT_FORWARD_DECLARE_CLASS(QStringListModel)
 
 namespace ROSProjectManager {
 namespace Internal {
+
+class RunStepListAspect : public Utils::BaseAspect {
+public:
+    RunStepListAspect(Utils::AspectContainer *container = nullptr, RunStepList *rsl = nullptr);
+};
 
 class ROSRunConfigurationFactory;
 
@@ -56,6 +62,12 @@ public:
     QString disabledReason(Utils::Id runMode) const override;
 
     RunStepList *stepList() const;
+
+    // TODO: need own aspect from
+    // RunStepsPage(this, Constants::ROS_RUN_STEPS_PAGE_ID);
+    // ProjectExplorer::ExecutableAspect executable{this};
+
+    RunStepListAspect aspect{this, m_stepList};
 
 private:
 
