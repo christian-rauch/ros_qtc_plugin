@@ -113,6 +113,12 @@ jobs:
           merge-multiple: true
           path: ./
 
+      - name: debug
+        run: |
+          pwd
+          ls
+          tree
+
       - name: create release
         id: release
         uses: softprops/action-gh-release@v2
