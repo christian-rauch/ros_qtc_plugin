@@ -102,7 +102,7 @@ jobs:
 
   release:
     name: create release
-    if: contains(github.ref, '/tags/')
+    # if: contains(github.ref, '/tags/')
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -128,6 +128,7 @@ jobs:
             qtcreator-plugin-ros-*-Windows-ARM64.zip
           fail_on_unmatched_files: true
           generate_release_notes: true
+          tag_name: test_rel
 
       - name: release on extension repository
         uses: qt-creator/deploy-qtc-plugin@v1.0
