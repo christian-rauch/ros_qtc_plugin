@@ -16,9 +16,9 @@ jobs:
         config:
           - { name: "Linux", os: ubuntu-22.04, build: "RelWithDebInfo" }
           - { name: "Linux-arm64", os: ubuntu-24.04-arm, build: "RelWithDebInfo" }
-          - { name: "Windows", os: windows-latest, msvc_arch: amd64, build: "Release" }
-          - { name: "Windows-arm64", os: windows-11-arm, msvc_arch: arm64, build: "Release" }
-          - { name: "macOS", os: macos-14, build: "Release" }
+          # - { name: "Windows", os: windows-latest, msvc_arch: amd64, build: "Release" }
+          # - { name: "Windows-arm64", os: windows-11-arm, msvc_arch: arm64, build: "Release" }
+          # - { name: "macOS", os: macos-14, build: "Release" }
     steps:
       - uses: actions/checkout@v4
 
@@ -77,28 +77,28 @@ jobs:
           path: |
             ./build/qtcreator-plugin-ros-*-*-*.zip
 
-      - name: install Qt Creator DEB package
-        if: runner.os == 'Linux'
-        run: |
-          wget $(./packaging/format-deb-url.py) --directory-prefix=${GITHUB_WORKSPACE}/build
-          sudo apt install --no-install-recommends ${GITHUB_WORKSPACE}/build/qtcreator-opensource-linux-*-*.deb
+      # - name: install Qt Creator DEB package
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     wget $(./packaging/format-deb-url.py) --directory-prefix=${GITHUB_WORKSPACE}/build
+      #     sudo apt install --no-install-recommends ${GITHUB_WORKSPACE}/build/qtcreator-opensource-linux-*-*.deb
 
-      - name: generate plugin DEB package
-        if: runner.os == 'Linux'
-        run: |
-          cd build
-          cpack -G DEB
+      # - name: generate plugin DEB package
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     cd build
+      #     cpack -G DEB
 
-      - name: upload artifact (DEB)
-        if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v4
-        with:
-          name: plugin_archive_artifact_${{ matrix.config.name }}_deb
-          if-no-files-found: error
-          path: |
-            ./build/qtcreator-opensource-linux-*-*.deb
-            ./build/qtcreator-plugin-ros_*_*.deb
-            ./build/qtcreator-plugin-ros-dbgsym_*_*.ddeb
+      # - name: upload artifact (DEB)
+      #   if: runner.os == 'Linux'
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: plugin_archive_artifact_${{ matrix.config.name }}_deb
+      #     if-no-files-found: error
+      #     path: |
+      #       ./build/qtcreator-opensource-linux-*-*.deb
+      #       ./build/qtcreator-plugin-ros_*_*.deb
+      #       ./build/qtcreator-plugin-ros-dbgsym_*_*.ddeb
 
   release:
     name: create release
@@ -118,14 +118,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            qtcreator-opensource-linux-*-*.deb
-            qtcreator-plugin-ros_*_*.deb
-            qtcreator-plugin-ros-dbgsym_*_*.ddeb
             qtcreator-plugin-ros-*-Linux-x86_64.zip
             qtcreator-plugin-ros-*-Linux-aarch64.zip
-            qtcreator-plugin-ros-*-Darwin-arm64.zip
-            qtcreator-plugin-ros-*-Windows-AMD64.zip
-            qtcreator-plugin-ros-*-Windows-ARM64.zip
           fail_on_unmatched_files: true
           generate_release_notes: true
           tag_name: test_rel
@@ -137,8 +131,5 @@ jobs:
           token: ${{ secrets.EXTENSION_STORE_API_TOKEN }}
           publish: true
           spec: ROSProjectManager.json
-          download-url-linux-x64:   ${{ fromJSON(steps.release.outputs.assets)[3].browser_download_url }}
-          download-url-linux-arm64: ${{ fromJSON(steps.release.outputs.assets)[4].browser_download_url }}
-          download-url-macos-arm64: ${{ fromJSON(steps.release.outputs.assets)[5].browser_download_url }}
-          download-url-win-x64:     ${{ fromJSON(steps.release.outputs.assets)[6].browser_download_url }}
-          download-url-win-arm64:   ${{ fromJSON(steps.release.outputs.assets)[7].browser_download_url }}
+          download-url-linux-x64:   ${{ fromJSON(steps.release.outputs.assets)[0].browser_download_url }}
+          download-url-linux-arm64: ${{ fromJSON(steps.release.outputs.assets)[1].browser_download_url }}
