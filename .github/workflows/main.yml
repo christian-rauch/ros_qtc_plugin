@@ -128,3 +128,16 @@ jobs:
             qtcreator-plugin-ros-*-Windows-ARM64.zip
           fail_on_unmatched_files: true
           generate_release_notes: true
+
+      - name: release on extension repository
+        uses: qt-creator/deploy-qtc-plugin@v1.0
+        with:
+          api: ${{ secrets.EXTENSION_STORE_API_URL }}
+          token: ${{ secrets.EXTENSION_STORE_API_TOKEN }}
+          publish: true
+          spec: ROSProjectManager.json
+          download-url-linux-x64:   ${{ fromJSON(steps.release.outputs.assets)[3].browser_download_url }}
+          download-url-linux-arm64: ${{ fromJSON(steps.release.outputs.assets)[4].browser_download_url }}
+          download-url-macos-arm64: ${{ fromJSON(steps.release.outputs.assets)[5].browser_download_url }}
+          download-url-win-x64:     ${{ fromJSON(steps.release.outputs.assets)[6].browser_download_url }}
+          download-url-win-arm64:   ${{ fromJSON(steps.release.outputs.assets)[7].browser_download_url }}
