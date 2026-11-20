@@ -16,9 +16,9 @@ jobs:
         config:
           - { name: "Linux", os: ubuntu-22.04, build: "RelWithDebInfo" }
           - { name: "Linux-arm64", os: ubuntu-24.04-arm, build: "RelWithDebInfo" }
-          - { name: "Windows", os: windows-latest, msvc_arch: amd64, build: "Release" }
-          - { name: "Windows-arm64", os: windows-11-arm, msvc_arch: arm64, build: "Release" }
-          - { name: "macOS", os: macos-14, build: "Release" }
+          # - { name: "Windows", os: windows-latest, msvc_arch: amd64, build: "Release" }
+          # - { name: "Windows-arm64", os: windows-11-arm, msvc_arch: arm64, build: "Release" }
+          # - { name: "macOS", os: macos-14, build: "Release" }
     steps:
       - uses: actions/checkout@v6
 
@@ -103,7 +103,7 @@ jobs:
 
   release:
     name: create release
-    if: contains(github.ref, '/tags/')
+    # if: contains(github.ref, '/tags/')
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -131,3 +131,27 @@ jobs:
           generate_release_notes: true
           append_body: false
           make_latest: true
+
+      - uses: actions/configure-pages@v6
+
+      - uses: morph027/apt-repo-action@v3
+        id: create-apt-repo
+        with:
+          repo-name: qtc-ros
+          signing-key: ${{ secrets.SIGNING_KEY }}
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          name: github-pages
+          path: ${{ steps.create-apt-repo.outputs.dir }}
+
+      - uses: actions/deploy-pages@v5
+
+      - name: Adding summary
+        run: |
+          echo ':rocket:' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo 'curl -sfLo /etc/apt.trusted.gpg.d/${{ needs.build.outputs.keyring }}.asc ${{ steps.deploy-pages.outputs.page_url }}gpg.key' >> $GITHUB_STEP_SUMMARY
+          echo 'echo "deb ${{ steps.deploy-pages.outputs.page_url }} ${{ env.CODENAME }} ${{ env.COMPONENTS }}" >/etc/apt/sources.list.d/${{ env.REPO_NAME }}.list' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
