@@ -48,6 +48,17 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install ninja
 
+      - name: cache Python packages and SDK archives
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cache/pip
+            ./*.7z
+            ./*.zip
+            ./*.tar.xz
+            ./*.tar.gz
+          key: ${{ runner.os }}-${{ runner.arch }}-sdk-${{ hashFiles('install-sdk.py') }}
+
       - name: install Qt and Qt Creator
         shell: bash
         run: |
