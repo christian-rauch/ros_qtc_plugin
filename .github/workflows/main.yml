@@ -161,7 +161,7 @@ jobs:
         id: create-apt-repo
         with:
           repo-name: qtc-ros
-          signing-key: ${{ secrets.SIGNING_KEY }}
+          signing-key: "default"
 
       - uses: actions/upload-pages-artifact@v5
         with:
